@@ -9,14 +9,14 @@ def get_images_by_page(page_num):
 
 	soup = BeautifulSoup(payload.text, 'lxml')
 	divs = soup.find_all(class_='big_image hide')
-	
+
 	image_urls = ['http:' + url.find('img')['src'] for url in divs]
 	
 	return image_urls
 
 # Downloads an image located at the specified resource location.
 # url : STRING -> specific resource location
-# path : STRING -> 
+# path : STRING -> location to be saved at
 def download_image(url, path):
 	with requests.get(url, stream=True) as r:
 		with open(path, 'wb') as f:
