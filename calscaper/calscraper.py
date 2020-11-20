@@ -1,3 +1,4 @@
+import pathlib
 import requests
 from bs4 import BeautifulSoup
 
@@ -21,18 +22,6 @@ def get_images_by_page(page_num=None, payload=None):
 	return image_urls
 
 # [Description]
-# Downloads an image located at the specified resource location.
-#
-# [Inputs]
-# url : STRING -> specific resource location
-# path : STRING -> location to be saved at
-def download_image(url, path):
-	with requests.get(url, stream=True) as r:
-		with open(path, 'wb') as f:
-			for chunk in r.iter_content(chunk_size=8192):
-				f.write(chunk)
-
-# [Description]
 # Gets name of plant by page num
 # If payload is specified, page_num value is ignored.
 #
@@ -49,7 +38,38 @@ def get_name_for_images(page_num=None, payload=None):
 	soup = BeautifulSoup(payload.text, 'lxml')
 	header = soup.find('h2')
 
-	return header.contents[0][14:]
+	return header.contents[0][14:].strip()
 
-print(len(get_images_by_page(page_num=10)))
-print(len(get_images_by_page(payload=requests.get('https://calscape.org/photos/10'))))
+# [Description]
+# Downloads an image located at the specified resource location.
+#
+# [Inputs]
+# url : STRING -> specific resource location
+# path : STRING -> location to be saved at
+def download_image(path, url):
+	with requests.get(url, stream=True) as r:
+		with open(path, 'wb') as f:
+			for chunk in r.iter_content(chunk_size=8192):
+				f.write(chunk)
+
+# [Description]
+# Downloads images located at the specified resource location.
+# Creates a new directory (named after the plant) in the location of the given script.
+#
+# [Inputs]
+# page_num : INT -> page number id
+def download_images(page_num):
+	target = 'https://calscape.org/photos/{0}'.format(page_num)
+	payload = requests.get(target)
+
+	image_urls = get_images_by_page(payload=payload)
+	plant_name = get_name_for_images(payload=payload)
+
+	pathlib.Path('{}/'.format(plant_name)).mkdir(exist_ok=True)
+
+	print('Downloading images for {}'.format(plant_name))
+	image_num = 0
+	for url in image_urls:
+		print('... Downloading image_{} at {}'.format(image_num, target))
+		download_image('{}/img_{}.jpeg'.format(plant_name, image_num), url)
+		image_num = image_num + 1
