@@ -41,6 +41,18 @@ def get_name_for_images(page_num=None, payload=None):
 	return header.contents[0][14:].strip()
 
 # [Description]
+# Gets payload of webpage
+# Returns a request object
+#
+# [Remarks]
+# This is only created so you do not need to import requests again.
+def get_payload_for_page(page_num):
+	target = 'https://calscape.org/photos/{0}'.format(page_num)
+	payload = requests.get(target)
+
+	return payload
+
+# [Description]
 # Downloads an image located at the specified resource location.
 #
 # [Inputs]
