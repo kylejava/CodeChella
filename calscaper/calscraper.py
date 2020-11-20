@@ -77,11 +77,13 @@ def download_images(page_num):
 	image_urls = get_images_by_page(payload=payload)
 	plant_name = get_name_for_images(payload=payload)
 
-	pathlib.Path('{}/'.format(plant_name)).mkdir(exist_ok=True)
+	pathlib.Path('images/{}/'.format(plant_name)).mkdir(parents=True, exist_ok=True)
 
 	print('Downloading images for {}'.format(plant_name))
 	image_num = 0
 	for url in image_urls:
 		print('... Downloading image_{} at {}'.format(image_num, target))
-		download_image('{}/img_{}.jpeg'.format(plant_name, image_num), url)
+		download_image('images/{}/img_{}.jpeg'.format(plant_name, image_num), url)
 		image_num = image_num + 1
+
+download_images(10)
