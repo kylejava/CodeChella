@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 #
 # [Inputs]
 # page_num : INT -> page id of plants
-# payLoad : HTTP Response code -> 1xx, 2xx, ..., 5xx
+# payLoad : requests object code -> 1xx, 2xx, ..., 5xx
 def get_images_by_page(page_num=None, payload=None):
 	if payload is None:
 		target = 'https://calscape.org/photos/{0}'.format(page_num)
@@ -30,6 +30,7 @@ def get_images_by_page(page_num=None, payload=None):
 #
 # [Inputs]
 # page_num : INT -> page id of plant
+# payLoad : requests object code -> 1xx, 2xx, ..., 5xx
 def get_name_for_images(page_num=None, payload=None):
 	if payload is None:
 		target = 'https://calscape.org/photos/{0}'.format(page_num)
