@@ -3,7 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 
 # [Description]
-# Returns a list of urls formatted as a string
+# Returns a list of image urls formatted as a string
 # If payload is specified, page_num value is ignored.
 #
 # [Inputs]
