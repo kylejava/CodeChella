@@ -6,6 +6,7 @@ import time
 from pprint import pprint
 import requests
 from test.predict import *
+from calscaper.calscraper import *
 from google.protobuf.json_format import MessageToJson
 #Replace Keys with Final Twitter Account
 auth = tweepy.OAuthHandler(s.consumer_key, s.consumer_secret)
@@ -26,8 +27,14 @@ def download_image(url , project_id, model_id):
         for chunk in r.iter_content(chunk_size=8192):
               content = content + chunk
 
-        x = get_prediction(content, project_id, model_id)
-        return(x)
+        name = get_prediction(content, project_id, model_id)
+        desc = get_description_by_name(name)
+
+        resp = {
+            'name': name,
+            'desc': desc
+        }
+        return(resp)
 
 
 
@@ -43,7 +50,7 @@ def searchForImages():
             image = (ent['media'][0]['media_url'])
             x = download_image(image, s.project_id, s.model_id)
             print("@" + mention.user.screen_name + " That is a " + x)
-            api.update_status(("@" + mention.user.screen_name + " That is a " + x),mention.id)
+            api.update_status(("@" + mention.user_scren_name + x['name'] + "\n" + x['desc']),mention.id)
 
 
 searchForImages()
