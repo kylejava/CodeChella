@@ -71,20 +71,22 @@ def download_image(path, url):
 #
 # [Inputs]
 # page_num : INT -> page number id
-def download_images(page_num):
-	target = 'https://calscape.org/photos/{0}'.format(page_num)
-	payload = requests.get(target)
+def download_images(page_num, image_urls=None, plant_name=None, payload=None):
+	if payload is None:
+		target = 'https://calscape.org/photos/{0}'.format(page_num)
+		payload = requests.get(target)
 
-	image_urls = get_images_by_page(payload=payload)
-	plant_name = get_name_for_images(payload=payload)
+	if image_urls is None:
+		image_urls = get_images_by_page(payload=payload)
+	
+	if plant_name is None:
+		plant_name = get_name_for_images(payload=payload)
 
 	pathlib.Path('images/{}/'.format(plant_name)).mkdir(parents=True, exist_ok=True)
 
 	print('Downloading images for {}'.format(plant_name))
 	image_num = 0
 	for url in image_urls:
-		print('... Downloading image_{} at {}'.format(image_num, target))
+		print('... Downloading image_{} at {}'.format(image_num, url))
 		download_image('images/{}/img_{}.jpeg'.format(plant_name, image_num), url)
 		image_num = image_num + 1
-
-download_images(10)
