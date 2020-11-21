@@ -109,5 +109,3 @@ def get_description_by_name(name):
 	soup = BeautifulSoup(payload.text, 'lxml')
 	header = soup.find(class_='plant_info')
 	print(header.find_all('fieldset')[0].get_text().replace('\n', '').replace('\t', '').strip())
-
-get_description_by_name('Chalk_dudleya')
