@@ -82,17 +82,23 @@ def download_images(page_num, image_urls=None, plant_name=None, payload=None):
 	if plant_name is None:
 		plant_name = get_name_for_images(payload=payload)
 
-	pathlib.Path('images/{}/'.format(plant_name)).mkdir(parents=True, exist_ok=True)
+	image_num = 0
+
+	prefix = plant_name.replace(' ', '_').lower()
+	pathlib.Path('images/{}/'.format(prefix)).mkdir(parents=True, exist_ok=True)
+	path = 'images/{}/{}'.format(prefix, prefix)
 
 	print('Downloading images for {}'.format(plant_name))
-	image_num = 0
+
 	for url in image_urls:
-		print('... Downloading image_{} at {}'.format(image_num, url))
-		download_image('images/{}/img_{}.jpeg'.format(plant_name, image_num), url)
+		print(f'... Downloading into {path}_{image_num}.jpeg')
+		download_image(f'{path}_{image_num}.jpeg', url)
 		image_num = image_num + 1
 
 # [Description]
-# 
+# Gets the common name of the plant
+# Returns a string
+#
 # [Inputs]
 # name : STRING -> scientific name to be searched
 def get_description_by_name(name):
@@ -104,4 +110,4 @@ def get_description_by_name(name):
 	header = soup.find(class_='plant_info')
 	print(header.find_all('fieldset')[0].get_text().replace('\n', '').replace('\t', '').strip())
 
-download_images(10)
+get_description_by_name('Chalk_dudleya')
