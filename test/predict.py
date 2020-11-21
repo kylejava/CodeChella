@@ -1,6 +1,7 @@
 import sys
 
-from google.cloud import *
+from google.cloud import automl_v1beta1
+from google.cloud.automl_v1beta1.proto import service_pb2
 
 
 # 'content' is base-64-encoded image data.
