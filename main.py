@@ -4,37 +4,46 @@ import json
 import webbrowser
 import time
 from pprint import pprint
-import os, io
-from google.cloud import vision
-import sys
 import requests
-from test import *
-
-#from google.cloud import storage
-#from google.cloud.vision_v1 import enums
-#from google.cloud.vision_v1 import ImageAnnotatorClient
-#from google.cloud.vision_v1 import types
-
+from test.predict import *
+from google.protobuf.json_format import MessageToJson
 #Replace Keys with Final Twitter Account
 auth = tweepy.OAuthHandler(s.consumer_key, s.consumer_secret)
 auth.set_access_token(s.access_token, s.access_token_secret)
 api = tweepy.API(auth)
 
-#Transfers the image to the Google Vision api
-def identifyImage(image_from_tweet):
-    image = 'https://www.mountroyalseeds.com/wp-content/uploads/2016/09/Abies-lasiocarpa_2-480x640.jpg'
-    client = vision.ImageAnnotatorClient()
-    response = client.annotate_image({
-  'image': {'source': {'image_uri': image}},
-  'features': [{'type': vision.enums.Feature.Type.FACE_DETECTION}],})
-    print(response)
+
+"""
+Function used to download images
+path, url are passed in from the searchForImages()
+"""
+
+def download_image(url , project_id, model_id):
+
+    path = 'image.png'
+    with requests.get(url, stream=True) as r:
+        content = b''
+        for chunk in r.iter_content(chunk_size=8192):
+              content = content + chunk
+
+        x = get_prediction(content, project_id, model_id)
+        return(x)
 
 
 
-# Grabs the picture from the last mentioned tweet'
+"""
+ Grabs the picture from the last mentioned tweet
+ TODO: Finish this function
+"""
 def searchForImages():
     mentions = api.mentions_timeline()
     for mention in mentions:
-        if('#roots' in mention.text):
-            print(mention.user.screen_name)
-            api.status_update('@' + mention.user.screen_name+ " test worked")
+        if('#roots' in mention.text and 'media' in mention.entities):
+            ent = (mention.entities)
+            image = (ent['media'][0]['media_url'])
+            x = download_image(image, s.project_id, s.model_id)
+            print("@" + mention.user.screen_name + " That is a " + x)
+            api.update_status(("@" + mention.user.screen_name + " That is a " + x),mention.id)
+
+
+searchForImages()
