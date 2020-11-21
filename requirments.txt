@@ -1,3 +1,4 @@
 requests==2.25.0
 lxml==4.6.1
 beautifulsoup4==4.9.3
+google-cloud-vision==2.0.0
