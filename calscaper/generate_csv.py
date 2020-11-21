@@ -1,7 +1,7 @@
 import glob
 import pathlib
 
-bucket_name='cali_veg_v1'
+bucket_name='cali_veg_1_0_0'
 
 img_loc=pathlib.Path('images/')
 folders=[x for x in img_loc.iterdir() if x.is_dir()]
