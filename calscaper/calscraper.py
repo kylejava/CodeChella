@@ -90,3 +90,18 @@ def download_images(page_num, image_urls=None, plant_name=None, payload=None):
 		print('... Downloading image_{} at {}'.format(image_num, url))
 		download_image('images/{}/img_{}.jpeg'.format(plant_name, image_num), url)
 		image_num = image_num + 1
+
+# [Description]
+# 
+# [Inputs]
+# name : STRING -> scientific name to be searched
+def get_description_by_name(name):
+	name = name.replace('_', '%20')
+	name = name + '(%20)'
+	payload = requests.get(f'https://calscape.org/loc-California/{name}')
+
+	soup = BeautifulSoup(payload.text, 'lxml')
+	header = soup.find(class_='plant_info')
+	print(header.find_all('fieldset')[0].get_text().replace('\n', '').replace('\t', '').strip())
+
+download_images(10)
