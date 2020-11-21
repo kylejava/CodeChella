@@ -18,14 +18,14 @@ def get_images_by_page(page_num=None, payload=None):
 	divs = soup.find_all(class_='big_image hide')
 
 	image_urls = ['http:' + url.find('img')['src'] for url in divs]
-	
+
 	return image_urls
 
 # [Description]
 # Gets name of plant by page num
 # If payload is specified, page_num value is ignored.
 #
-# [!!!WARNINGS!!!] 
+# [!!!WARNINGS!!!]
 # Could possibly could return a blank name!
 #
 # [Inputs]
@@ -35,7 +35,7 @@ def get_name_for_images(page_num=None, payload=None):
 	if payload is None:
 		target = 'https://calscape.org/photos/{0}'.format(page_num)
 		payload = requests.get(target)
-	
+
 	soup = BeautifulSoup(payload.text, 'lxml')
 	header = soup.find('h2')
 
@@ -78,7 +78,7 @@ def download_images(page_num, image_urls=None, plant_name=None, payload=None):
 
 	if image_urls is None:
 		image_urls = get_images_by_page(payload=payload)
-	
+
 	if plant_name is None:
 		plant_name = get_name_for_images(payload=payload)
 
@@ -94,6 +94,30 @@ def download_images(page_num, image_urls=None, plant_name=None, payload=None):
 		print(f'... Downloading into {path}_{image_num}.jpeg')
 		download_image(f'{path}_{image_num}.jpeg', url)
 		image_num = image_num + 1
+
+
+# [Description]
+# Gets the scientific name of the plant
+# Returns the description and common name of plant
+#
+# [Inputs]
+# name : STRING -> scientific name used to get description
+def parse_sentence(name):
+	string = get_description_by_name(name)
+	desc = " "
+	char = " "
+	i = 0
+	if('Carry This Plant Add to My Plant List' in string):
+		string = string.replace(' Add to My Plant List' , ', ')
+	while (char!="."):
+		char = string[i]
+		desc += char
+		i += 1
+	return desc
+
+
+
+
 
 # [Description]
 # Gets the common name of the plant
