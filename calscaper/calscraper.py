@@ -1,5 +1,6 @@
 import pathlib
 import requests
+import re
 from bs4 import BeautifulSoup
 
 # [Description]
@@ -95,30 +96,6 @@ def download_images(page_num, image_urls=None, plant_name=None, payload=None):
 		download_image(f'{path}_{image_num}.jpeg', url)
 		image_num = image_num + 1
 
-
-# [Description]
-# Gets the scientific name of the plant
-# Returns the description and common name of plant
-#
-# [Inputs]
-# name : STRING -> scientific name used to get description
-def parse_sentence(name):
-	string = get_description_by_name(name)
-	desc = " "
-	char = " "
-	i = 0
-	if('Carry This Plant Add to My Plant List' in string):
-		string = string.replace(' Add to My Plant List' , ', ')
-	while (char!="."):
-		char = string[i]
-		desc += char
-		i += 1
-	return desc
-
-
-
-
-
 # [Description]
 # Gets the common name of the plant
 # Returns a string
@@ -133,3 +110,25 @@ def get_description_by_name(name):
 	soup = BeautifulSoup(payload.text, 'lxml')
 	header = soup.find(class_='plant_info')
 	return(header.find_all('fieldset')[0].get_text().replace('\n', '').replace('\t', '').strip())
+
+# [Description]
+# Gets the scientific name of the plant
+# Returns the description and common name of plant
+#
+# [Inputs]
+# name : STRING -> scientific name used to get description
+def parse_sentence(name):
+	string = get_description_by_name(name)
+	desc = " "
+	char = " "
+	i = 0
+	'''
+	if('Carry This Plant Add to My Plant List' in string):
+		string = string.replace(' Add to My Plant List' , ', ')
+	'''
+	remove=re.search('\s+[1-9]+ Nurseries Carry This Plant Add to My Plant List(\\r)?', string)
+	desc=''.join([string[:remove.start()], ', ', string[remove.end():]])
+	desc=desc.split('.')
+	desc=[x+'.' for x in desc]
+
+	return desc[0]
