@@ -136,10 +136,13 @@ def parse_sentence(name):
 	if('Carry This Plant Add to My Plant List' in string):
 		string = string.replace(' Add to My Plant List' , ', ')
 	'''
-	remove = re.search('\s+[1-9]+ Nurseries Carry This Plant Add to My Plant List(\\r)?', string)
-	
-	desc = ''.join([string[:remove.start()], ', ', string[remove.end():]])
-	desc = desc.split('.')
-	desc = [x+'.' for x in desc]
+	remove = re.search('\s+[0-9]+ Nurseries Carry This Plant Add to My Plant List(\\r)?', string)
+	if remove:
+		desc = ''.join([string[:remove.start()], ', ', string[remove.end():]])
+		desc = desc.split('.')
+		desc = [x+'.' for x in desc]
+	else:
+		desc=[string]
+
 
 	return desc[0]
