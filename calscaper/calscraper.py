@@ -97,16 +97,26 @@ def download_images(page_num, image_urls=None, plant_name=None, payload=None):
 		image_num = image_num + 1
 
 # [Description]
+# Returns a webpage search URL
+#
+# [Inputs]
+# name : STRING -> scientific name to be searched
+#
+def get_webpage(name):
+	name = name.replace('_', '%20')
+	name = name + '(%20)'
+	return f'https://calscape.org/loc-California/{name}'
+
+# [Description]
 # Gets the common name of the plant
 # Returns a string
 #
 # [Inputs]
 # name : STRING -> scientific name to be searched
 def get_description_by_name(name):
-	name = name.replace('_', '%20')
-	name = name + '(%20)'
-	payload = requests.get(f'https://calscape.org/loc-California/{name}')
-
+	url = get_webpage(name)
+	payload = requests.get(url)
+	
 	soup = BeautifulSoup(payload.text, 'lxml')
 	header = soup.find(class_='plant_info')
 	return(header.find_all('fieldset')[0].get_text().replace('\n', '').replace('\t', '').strip())
@@ -126,9 +136,10 @@ def parse_sentence(name):
 	if('Carry This Plant Add to My Plant List' in string):
 		string = string.replace(' Add to My Plant List' , ', ')
 	'''
-	remove=re.search('\s+[1-9]+ Nurseries Carry This Plant Add to My Plant List(\\r)?', string)
-	desc=''.join([string[:remove.start()], ', ', string[remove.end():]])
-	desc=desc.split('.')
-	desc=[x+'.' for x in desc]
+	remove = re.search('\s+[1-9]+ Nurseries Carry This Plant Add to My Plant List(\\r)?', string)
+	
+	desc = ''.join([string[:remove.start()], ', ', string[remove.end():]])
+	desc = desc.split('.')
+	desc = [x+'.' for x in desc]
 
 	return desc[0]
