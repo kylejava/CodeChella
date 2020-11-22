@@ -20,8 +20,6 @@ path, url are passed in from the searchForImages()
 """
 
 def download_image(url , project_id, model_id):
-    #take this out later
-    url = 'https://alchetron.com/cdn/abronia-maritima-06132f4d-5ecb-4acf-bf23-5a2b474fe6e-resize-750.jpg'
     path = 'image.png'
     with requests.get(url, stream=True) as r:
         content = b''
@@ -30,9 +28,11 @@ def download_image(url , project_id, model_id):
 
         name = get_prediction(content, project_id, model_id)
         desc = parse_sentence(name)
+        link = get_webpage(name)
         resp = {
             'name': name,
-            'desc': desc
+            'desc': desc,
+            'link': link
         }
         return(resp)
 
@@ -44,7 +44,6 @@ def check_id_in_file(id):
     with open('replied_tweets.txt' , 'r') as read_obj:
         for line in read_obj:
             if(id in line):
-                print("found tweet")
                 return True
 
     return False
@@ -68,13 +67,16 @@ def searchForImages():
             myFile.write(str(mention.id))
             myFile.write("\n")
             api.update_status(("@" + mention.user.screen_name + " " + plant['desc']), mention.id)
+            api.update_status(("@" + mention.user.screen_name + " Learn more about it here! " + plant['link']), mention.id)
+            print("Replied")
 
     myFile.close()
 
 
 def main():
     while(True):
+        print("Searching for Images")
         searchForImages()
-        time.sleep(60)
+        time.sleep(5)
 
 main()
