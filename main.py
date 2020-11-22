@@ -73,4 +73,9 @@ def searchForImages():
     myFile.close()
 
 
-searchForImages()
+def main():
+    while(True):
+        searchForImages()
+        time.sleep(60)
+
+main()
