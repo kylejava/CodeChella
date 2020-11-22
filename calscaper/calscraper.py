@@ -139,10 +139,11 @@ def parse_sentence(name):
 	remove = re.search('\s+[0-9]+ Nurseries Carry This Plant Add to My Plant List(\\r)?', string)
 	if remove:
 		desc = ''.join([string[:remove.start()], ', ', string[remove.end():]])
-		desc = desc.split('.')
-		desc = [x+'.' for x in desc]
 	else:
-		desc=[string]
+		desc=string
+	
+	desc = desc.split('.')
+	desc = [x+'.' for x in desc]
 
 
 	return desc[0]
