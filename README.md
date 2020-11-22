@@ -14,6 +14,12 @@ We used Python to utilize the Twitter API to allow us to tweet back to users, no
 
 We also made use of Google Cloud Platform. We used the storage services to store our training data and Google Vision to create our custom machine learning model.
 
+In order to create our custom machine learning model, we need to find a dataset of labeled flowers. Initially, we couldn't find any dataset that fulfilled our needs. To solve this problem, we created our own dataset! We built a tool to download images and information from [calscape.org](https://calscape.org/). After we downloaded the images, we organized them into their respective folder by using their scientific plant name.
+
+After organizing the images by name, we created a script that generates a `labels.csv` for our custom machine learning model to accept. This will load the images (all 2680 images!) into Google Vision and label them!
+
+Training took the longest part of the development process. It would take several hours for the training to complete. After the training was completed, the was immediately deployed and available for usage.
+
 ## Challenges we ran into
 Many challenges were faced when working on the project. One challenge faced was trying to figure out how to reply back to a tweet after a user has tweeted to us. Another challenge was getting the media URL because we were having trouble trying to parse through the JSON file. Some of our team members also have limited knowledge in Python, posing another challenge especially with downloading an image using Python.
 
