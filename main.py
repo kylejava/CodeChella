@@ -5,7 +5,7 @@ import webbrowser
 import time
 from pprint import pprint
 import requests
-from test.predict import *
+from auto_ml.predict import *
 from calscaper.calscraper import *
 from google.protobuf.json_format import MessageToJson
 
@@ -13,7 +13,6 @@ from google.protobuf.json_format import MessageToJson
 auth = tweepy.OAuthHandler(s.consumer_key, s.consumer_secret)
 auth.set_access_token(s.access_token, s.access_token_secret)
 api = tweepy.API(auth)
-mention_list = [1330070456221757441]
 
 """
 Function used to download images

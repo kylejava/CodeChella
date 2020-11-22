@@ -1,9 +1,10 @@
 keys.py
 __pycache__
-images/
+calscraper/images/
 *.png
 *.jpeg
 CodeChella-315303cc6526.json
 auto-ml-service-account.json
 *.zip
 *.csv
+.idea/
