@@ -55,7 +55,7 @@ def check_id_in_file(id):
 
 """
  Grabs the picture from the last mentioned tweet
- TODO: Finish this function
+ and then returns data to about that plant to the twitter user
 """
 def searchForImages():
     mentions = api.mentions_timeline()
@@ -68,10 +68,8 @@ def searchForImages():
             plant = download_image(image, s.project_id, s.model_id)
             myFile.write(str(mention.id))
             myFile.write("\n")
-            #print("Added ti fuke")
+            api.update_status(("@" + mention.user.screen_name + " " + plant['desc']), mention.id)
 
-            #print("@" + mention.user.screen_name + " That is a " + x)
-            #api.update_status(("@" + mention.user_scren_name + x['name'] + "\n" + x['desc']),mention.id)
     myFile.close()
 
 
