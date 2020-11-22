@@ -13,7 +13,7 @@ from google.protobuf.json_format import MessageToJson
 auth = tweepy.OAuthHandler(s.consumer_key, s.consumer_secret)
 auth.set_access_token(s.access_token, s.access_token_secret)
 api = tweepy.API(auth)
-
+mention_list = [1330070456221757441]
 
 """
 Function used to download images
@@ -37,6 +37,20 @@ def download_image(url , project_id, model_id):
         }
         return(resp)
 
+"""
+Function is used to check if a given id is in the replied_tweets.txt file
+if it is found it will return True otherwise return false
+"""
+def check_id_in_file(id):
+    with open('replied_tweets.txt' , 'r') as read_obj:
+        for line in read_obj:
+            if(id in line):
+                print("found tweet")
+                return True
+
+    return False
+
+
 
 
 """
@@ -45,14 +59,20 @@ def download_image(url , project_id, model_id):
 """
 def searchForImages():
     mentions = api.mentions_timeline()
+    myFile = open('replied_tweets.txt', 'a')
     for mention in mentions:
-        if('#roots' in mention.text and 'media' in mention.entities):
+        mention_id = str(mention.id)
+        if(('#roots' in mention.text) and ('media' in mention.entities) and (check_id_in_file(mention_id)== False)):
             ent = (mention.entities)
             image = (ent['media'][0]['media_url'])
             plant = download_image(image, s.project_id, s.model_id)
-            pprint(plant)
+            myFile.write(str(mention.id))
+            myFile.write("\n")
+            #print("Added ti fuke")
+
             #print("@" + mention.user.screen_name + " That is a " + x)
             #api.update_status(("@" + mention.user_scren_name + x['name'] + "\n" + x['desc']),mention.id)
+    myFile.close()
 
 
 searchForImages()
